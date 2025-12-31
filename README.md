@@ -16,7 +16,7 @@
 ~~12. A trigger that deletes all expired reservations.~~
 
 ## Insurance Database 
-
+![](https://r2.fivemanage.com/image/7mUExlZ4LrdS.png)
 1. Find the total number of people who owned cars that were involved in accidents in 2021. 
 2. Find the number of accidents in which the cars belonging to “Smith” were involved.  
 3. Add a new accident to the database; assume any values for required attributes.  
@@ -29,7 +29,7 @@
 10. A trigger that prevents a driver from participating in more than 3 accidents in a given year.
 
 ## Order Processing Database 
-
+![](https://r2.fivemanage.com/image/j4KXPOKMLk2N.png)
 1. List the Order# and Ship\_date for all orders shipped from Warehouse# "W2". 
 2. List the Warehouse information from which the Customer named "Kumar" was supplied his orders. Produce a listing of Order#, Warehouse#. 
 3. Produce a listing: Cname, #ofOrders, Avg\_Order\_Amt, where the middle column is the total number of orders by the customer and the last column is the average order amount for that customer. (Use aggregate functions) 
@@ -41,7 +41,7 @@
 9. A tigger that updates order\_amount based on quantity and unit price of order\_item .
 
 ## Enrollment Database 
-
+![](https://r2.fivemanage.com/image/2xoiAiV1ZQwb.png)
 1. Demonstrate how you add a new text book to the database and make this book be adopted by some department.  
 2. Produce a list of text books (include Course #, Book-ISBN, Book-title) in the alphabetical order for courses offered by the ‘CS’ department that use more than two books.  
 3. List any department that has all its adopted books published by a specific publisher. 
@@ -53,7 +53,7 @@
 9. Create a trigger that prevents a student from enrolling in a course if the marks pre\_requisit is less than the given threshold . 
 
 ## Company Database 
-
+![](https://r2.fivemanage.com/image/3EtOcC4qOG6m.png)
 1. Make a list of all project numbers for projects that involve an employee whose last name is ‘Scott’, either as a worker or as a manager of the department that controls the project.  
 2. Show the resulting salaries if every employee working on the ‘IoT’ project is given a 10 percent raise.  
 3. Find the sum of the salaries of all employees of the ‘Accounts’ department, as well as the maximum salary, the minimum salary, and the average salary in this department  
