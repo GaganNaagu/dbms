@@ -73,3 +73,5 @@
 7. Create a trigger that prevents a project from being deleted if it is currently being worked by any employee.
 8. ~~Create a view that shows project name, location and dept.~~
 9. ~~A trigger that automatically updates manager’s start date when he is assigned .~~
+
+https://chatgpt.com/share/6954d828-d44c-800c-af90-51d052adfed7

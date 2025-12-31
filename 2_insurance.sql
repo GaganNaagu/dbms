@@ -80,9 +80,10 @@ INSERT INTO participated VALUES
 
 -- 1. Find the total number of people who owned a car that were involved in accidents in 2021
 
-select COUNT(driver_id)
-from participated p, accident a
-where p.report_no=a.report_no and a.accident_date like "2021%";
+select COUNT(DISTINCT p.driver_id)
+from participated p
+join accident a on p.report_no = a.report_no
+where year(a.accident_date) = 2021;
 
 -- 2. Find the number of accident in which cars belonging to smith were involved
 
@@ -102,10 +103,11 @@ insert into participated values
 
 -- 4. Delete the Mazda belonging to Smith
 
-delete from car
-where model="Mazda" and reg_no in
-(select car.reg_no from person p, owns o where p.driver_id=o.driver_id and o.reg_no=car.reg_no and p.driver_name="Smith");
-
+DELETE c
+FROM car c
+JOIN owns o   ON c.reg_no = o.reg_no
+JOIN person p ON o.driver_id = p.driver_id
+WHERE c.model = 'Mazda' AND p.driver_name = 'Smith';
 
 -- 5. Update the damage amount for the car with reg_no of KA-09-MA-1234 in the accident with report_no 65738
 
@@ -123,16 +125,31 @@ select * from CarsInAccident;
 -- 7. A trigger that prevents a driver from participating in more than 3 accidents in a given year.
 
 DELIMITER //
-create trigger PreventParticipation
-before insert on participated
-for each row
+CREATE TRIGGER PreventParticipation
+BEFORE INSERT ON participated
+FOR EACH ROW
 BEGIN
-    IF 3<=(select count(*) from participated p, accident a where p.driver_id=new.driver_id and p.report_no=a.report_no and
-    year(a.accident_date)=(select year(accident_date) from accident where report_no=new.report_no)) THEN
-		signal sqlstate '45000' set message_text='Driver has already participated in 3 accidents';
-	END IF;
-END;//
+    DECLARE acc_year INT;
+
+    SELECT YEAR(accident_date)
+    INTO acc_year
+    FROM accident
+    WHERE report_no = NEW.report_no;
+
+    IF (
+        SELECT COUNT(*)
+        FROM participated p
+        JOIN accident a ON p.report_no = a.report_no
+        WHERE p.driver_id = NEW.driver_id
+          AND YEAR(a.accident_date) = acc_year
+    ) >= 3 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Driver has already participated in 3 accidents in this year';
+    END IF;
+END;
+//
 DELIMITER ;
+
 
 INSERT INTO participated VALUES
 ("D222", "KA-20-AB-4223", 66666, 20000);

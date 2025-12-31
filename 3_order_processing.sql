@@ -97,14 +97,19 @@ SELECT * FROM Warehouses;
 select order_id,ship_date from Shipments where warehouse_id=0001;
 
 -- 2. List the Warehouse information from which the Customer named "Kumar" was supplied his orders. Produce a listing of Order#, Warehouse#
-select order_id,warehouse_id from Warehouses natural join Shipments where order_id in (select order_id from Orders where cust_id in (Select cust_id from Customers where cname like "%Kumar%"));
+SELECT s.order_id, s.warehouse_id
+FROM Shipments s
+JOIN Orders o    ON s.order_id = o.order_id
+JOIN Customers c ON o.cust_id = c.cust_id
+WHERE c.cname = 'Kumar';
 
 -- 3. Produce a listing: Cname, #ofOrders, Avg_Order_Amt, where the middle column is the total number of orders by the customer and the last column is the average order amount for that customer. (Use aggregate functions)
-select cname, COUNT(*) as no_of_orders, AVG(order_amt) as avg_order_amt
-from Customers c, Orders o
-where c.cust_id=o.cust_id
-group by cname;
-
+SELECT c.cname,
+       COUNT(o.order_id) AS no_of_orders,
+       AVG(o.order_amt) AS avg_order_amt
+FROM Customers c
+JOIN Orders o ON c.cust_id = o.cust_id
+GROUP BY c.cname;
 
 -- 4. Delete all orders for customer named "Kumar".
 delete from Orders where cust_id = (select cust_id from Customers where cname like "%Kumar%");
@@ -125,14 +130,22 @@ select * from ShipmentDatesFromWarehouse2;
 
 -- 7. A tigger that updates order_amount based on quantity and unit price of order_item
 
-DELIMITER $$
-create trigger UpdateOrderAmt
-after insert on OrderItems
-for each row
+DELIMITER //
+CREATE TRIGGER UpdateOrderAmt
+AFTER INSERT ON OrderItems
+FOR EACH ROW
 BEGIN
-	update Orders set order_amt=(new.qty*(select distinct unitprice from Items NATURAL JOIN OrderItems where item_id=new.item_id)) where Orders.order_id=new.order_id;
-END; $$
+    UPDATE Orders
+    SET order_amt = NEW.qty * (
+        SELECT unitprice
+        FROM Items
+        WHERE item_id = NEW.item_id
+    )
+    WHERE order_id = NEW.order_id;
+END;
+//
 DELIMITER ;
+
 
 INSERT INTO Orders VALUES
 (006, "2020-12-23", 0004, 1200);
