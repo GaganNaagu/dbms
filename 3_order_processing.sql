@@ -155,7 +155,31 @@ INSERT INTO OrderItems VALUES
 
 select * from Orders;
 
---------Extras------------
+--
+--
+--    EEEEEEEEEEEEEEEEEEEEEE                             tttt
+--    E::::::::::::::::::::E                          ttt:::t
+--    E::::::::::::::::::::E                          t:::::t
+--    EE::::::EEEEEEEEE::::E                          t:::::t
+--      E:::::E       EEEEEExxxxxxx      xxxxxxxttttttt:::::ttttttt   rrrrr   rrrrrrrrr   aaaaaaaaaaaaa
+--      E:::::E              x:::::x    x:::::x t:::::::::::::::::t   r::::rrr:::::::::r  a::::::::::::a
+--      E::::::EEEEEEEEEE     x:::::x  x:::::x  t:::::::::::::::::t   r:::::::::::::::::r aaaaaaaaa:::::a
+--      E:::::::::::::::E      x:::::xx:::::x   tttttt:::::::tttttt   rr::::::rrrrr::::::r         a::::a
+--      E:::::::::::::::E       x::::::::::x          t:::::t          r:::::r     r:::::r  aaaaaaa:::::a
+--      E::::::EEEEEEEEEE        x::::::::x           t:::::t          r:::::r     rrrrrrraa::::::::::::a
+--      E:::::E                  x::::::::x           t:::::t          r:::::r           a::::aaaa::::::a
+--      E:::::E       EEEEEE    x::::::::::x          t:::::t    ttttttr:::::r          a::::a    a:::::a
+--    EE::::::EEEEEEEE:::::E   x:::::xx:::::x         t::::::tttt:::::tr:::::r          a::::a    a:::::a
+--    E::::::::::::::::::::E  x:::::x  x:::::x        tt::::::::::::::tr:::::r          a:::::aaaa::::::a
+--    E::::::::::::::::::::E x:::::x    x:::::x         tt:::::::::::ttr:::::r           a::::::::::aa:::a
+--    EEEEEEEEEEEEEEEEEEEEEExxxxxxx      xxxxxxx          ttttttttttt  rrrrrrr            aaaaaaaaaa  aaaa
+--
+--
+--
+--
+--
+--
+--
 
 -- 8. Trigger that prevents warehouse details from being deleted if any item has to be shipped from that warehouse
 

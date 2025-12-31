@@ -115,7 +115,9 @@ create trigger CheckAndDelete
 before delete on Boat
 for each row
 BEGIN
-	IF EXISTS (select * from reserves where reserves.bid=old.bid) THEN
+	IF EXISTS
+		(select * from reserves where reserves.bid=old.bid)
+	THEN
 		SIGNAL SQLSTATE '45000' SET message_text='Boat is reserved and hence cannot be deleted';
 	END IF;
 END;//
@@ -124,8 +126,31 @@ DELIMITER ;
 
 delete from Boat where bid=103; -- This gives error since boat 103 is reserved
 
---------Extras------------
-
+--
+--
+--    EEEEEEEEEEEEEEEEEEEEEE                             tttt
+--    E::::::::::::::::::::E                          ttt:::t
+--    E::::::::::::::::::::E                          t:::::t
+--    EE::::::EEEEEEEEE::::E                          t:::::t
+--      E:::::E       EEEEEExxxxxxx      xxxxxxxttttttt:::::ttttttt   rrrrr   rrrrrrrrr   aaaaaaaaaaaaa
+--      E:::::E              x:::::x    x:::::x t:::::::::::::::::t   r::::rrr:::::::::r  a::::::::::::a
+--      E::::::EEEEEEEEEE     x:::::x  x:::::x  t:::::::::::::::::t   r:::::::::::::::::r aaaaaaaaa:::::a
+--      E:::::::::::::::E      x:::::xx:::::x   tttttt:::::::tttttt   rr::::::rrrrr::::::r         a::::a
+--      E:::::::::::::::E       x::::::::::x          t:::::t          r:::::r     r:::::r  aaaaaaa:::::a
+--      E::::::EEEEEEEEEE        x::::::::x           t:::::t          r:::::r     rrrrrrraa::::::::::::a
+--      E:::::E                  x::::::::x           t:::::t          r:::::r           a::::aaaa::::::a
+--      E:::::E       EEEEEE    x::::::::::x          t:::::t    ttttttr:::::r          a::::a    a:::::a
+--    EE::::::EEEEEEEE:::::E   x:::::xx:::::x         t::::::tttt:::::tr:::::r          a::::a    a:::::a
+--    E::::::::::::::::::::E  x:::::x  x:::::x        tt::::::::::::::tr:::::r          a:::::aaaa::::::a
+--    E::::::::::::::::::::E x:::::x    x:::::x         tt:::::::::::ttr:::::r           a::::::::::aa:::a
+--    EEEEEEEEEEEEEEEEEEEEEExxxxxxx      xxxxxxx          ttttttttttt  rrrrrrr            aaaaaaaaaa  aaaa
+--
+--
+--
+--
+--
+--
+--                                                                                                        
 -- 9. A view that shows names and ratings of all sailors sorted by rating in descending order
 
 create view NamesAndRating as
