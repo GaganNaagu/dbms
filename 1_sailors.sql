@@ -67,12 +67,16 @@ where reserves.bid=103);
 
 -- 3. Find the names of the sailor who have not reserved a boat whose name contains the string "storm". Order the name in the ascending order
 
-select s.sname
-from Sailors s
-where s.sid not in
-(select s1.sid from Sailors s1, reserves r1 where r1.sid=s1.sid and s1.sname like "%storm%")
-and s.sname like "%storm%"
-order by s.sname ASC;
+SELECT DISTINCT s.sname
+FROM Sailors s
+WHERE s.sid NOT IN (
+    SELECT r.sid
+    FROM reserves r
+    JOIN Boat b ON r.bid = b.bid
+    WHERE b.bname LIKE '%storm%'
+)
+ORDER BY s.sname ASC;
+
 
 -- 4. Find the name of the sailors who have reserved all boats
 
