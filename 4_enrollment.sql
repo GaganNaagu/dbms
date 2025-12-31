@@ -83,7 +83,7 @@ select * from TextBook;
 
 
 
--- Demonstrate how you add a new text book to the database and make this book be adopted by some department.
+-- 1. Demonstrate how you add a new text book to the database and make this book be adopted by some department.
 insert into TextBook values
 (123456, "Chandan The Autobiography", "Pearson", "Chandan");
 
@@ -91,7 +91,7 @@ insert into BookAdoption values
 (001, 5, 123456);
 
 
--- Produce a list of text books (include Course #, Book-ISBN, Book-title) in the alphabetical order for courses offered by the ‘CS’ department that use more than two books.
+-- 2. Produce a list of text books (include Course #, Book-ISBN, Book-title) in the alphabetical order for courses offered by the ‘CS’ department that use more than two books.
 SELECT c.course,t.bookIsbn,t.book_title
      FROM Course c,BookAdoption ba,TextBook t
      WHERE c.course=ba.course
@@ -104,7 +104,7 @@ SELECT c.course,t.bookIsbn,t.book_title
      ORDER BY t.book_title;
 
 
--- List any department that has all its adopted books published by a specific publisher.
+-- 3. List any department that has all its adopted books published by a specific publisher.
 SELECT DISTINCT c.dept
      FROM Course c
      WHERE c.dept IN
@@ -121,49 +121,20 @@ SELECT DISTINCT c.dept
      AND t.publisher!='PEARSON');
 
 
--- List the students who have scored maximum marks in ‘DBMS’ course.
+-- 4. List the students who have scored maximum marks in ‘DBMS’ course.
 
 select name from Student s, Enroll e, Course c
 where s.regno=e.regno and e.course=c.course and c.cname="DBMS" and e.marks in (select max(marks) from Enroll e1, Course c1 where c1.cname="DBMS" and c1.course=e1.course);
 
 
--- Create a view to display all the courses opted by a student along with marks obtained.
+-- 5. Create a view to display all the courses opted by a student along with marks obtained.
 create view CoursesOptedByStudent as
 select c.cname, e.marks from Course c, Enroll e
 where e.course=c.course and e.regno="01HF235";
 
 select * from CoursesOptedByStudent;
 
-
--- Create a view to show the enrolled details of a student.
-create view StudentEnrollmentDetails as
-select * from Enroll
-where regno="01HF235";
-
-select * from StudentEnrollmentDetails;
-
--- Create a view to display course related books from course_adoption and text book table using book_ISBN.
-create view CourseRelatedBooks as
-select cname, book_title
-from Course c, TextBook tb, BookAdoption ba
-where c.course=ba.course and tb.bookIsbn=ba.bookIsbn;
-
-select * from CourseRelatedBooks;
-
--- Create a trigger such that it Deletes all records from enroll table when course is deleted
-DELIMITER //
-create trigger DeleteRecords
-after delete on Course
-for each row
-BEGIN
-	DELETE FROM Enroll where Enroll.course=OLD.course;
-END;//
-
-DELIMITER ;
-
-delete from Course where course=2; -- Will also delete records from Enroll table
-
--- Create a trigger that prevents a student from enrolling in a course if the marks pre_requisit is less than the given threshold
+-- 6. Create a trigger that prevents a student from enrolling in a course if the marks pre_requisit is less than the given threshold
 DELIMITER //
 create trigger PreventEnrollment
 before insert on Enroll
@@ -178,3 +149,32 @@ DELIMITER ;
 
 INSERT INTO Enroll VALUES
 ("01HF235", 002, 5, 5); -- Gives error since marks is less than 10
+
+
+-- 7. Create a view to show the enrolled details of a student.
+create view StudentEnrollmentDetails as
+select * from Enroll
+where regno="01HF235";
+
+select * from StudentEnrollmentDetails;
+
+-- 8. Create a view to display course related books from course_adoption and text book table using book_ISBN.
+create view CourseRelatedBooks as
+select cname, book_title
+from Course c, TextBook tb, BookAdoption ba
+where c.course=ba.course and tb.bookIsbn=ba.bookIsbn;
+
+select * from CourseRelatedBooks;
+
+-- 9. Create a trigger such that it Deletes all records from enroll table when course is deleted
+DELIMITER //
+create trigger DeleteRecords
+after delete on Course
+for each row
+BEGIN
+	DELETE FROM Enroll where Enroll.course=OLD.course;
+END;//
+
+DELIMITER ;
+
+delete from Course where course=2; -- Will also delete records from Enroll table

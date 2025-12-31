@@ -78,20 +78,20 @@ INSERT INTO participated VALUES
 
 
 
--- Find the total number of people who owned a car that were involved in accidents in 2021
+-- 1. Find the total number of people who owned a car that were involved in accidents in 2021
 
 select COUNT(driver_id)
 from participated p, accident a
 where p.report_no=a.report_no and a.accident_date like "2021%";
 
--- Find the number of accident in which cars belonging to smith were involved
+-- 2. Find the number of accident in which cars belonging to smith were involved
 
 select COUNT(distinct a.report_no)
 from accident a
 where exists
 (select * from person p, participated ptd where p.driver_id=ptd.driver_id and p.driver_name="Smith" and a.report_no=ptd.report_no);
 
--- Add a new accident to the database
+-- 3. Add a new accident to the database
 
 insert into accident values
 (45562, "2024-04-05", "Mandya");
@@ -100,18 +100,18 @@ insert into participated values
 ("D222", "KA-21-BD-4728", 45562, 50000);
 
 
--- Delete the Mazda belonging to Smith
+-- 4. Delete the Mazda belonging to Smith
 
 delete from car
 where model="Mazda" and reg_no in
 (select car.reg_no from person p, owns o where p.driver_id=o.driver_id and o.reg_no=car.reg_no and p.driver_name="Smith");
 
 
--- Update the damage amount for the car with reg_no of KA-09-MA-1234 in the accident with report_no 65738
+-- 5. Update the damage amount for the car with reg_no of KA-09-MA-1234 in the accident with report_no 65738
 
 update participated set damage_amount=10000 where report_no=65738 and reg_no="KA-09-MA-1234";
 
--- View that shows models and years of car that are involved in accident
+-- 6. View that shows models and years of car that are involved in accident
 
 create view CarsInAccident as
 select distinct model, c_year
@@ -120,44 +120,7 @@ where c.reg_no=p.reg_no;
 
 select * from CarsInAccident;
 
--- Create a view that shows name and address of drivers who own a car.
-
-create view DriversWithCar as
-select driver_name, address
-from person p, owns o
-where p.driver_id=o.driver_id;
-
-select * from DriversWithCar;
-
-
--- Create a view that shows the names of the drivers who a participated in a accident in a specific place.
-
-create view DriversWithAccidentInPlace as
-select driver_name
-from person p, accident a, participated ptd
-where p.driver_id = ptd.driver_id and a.report_no = ptd.report_no and a.location="Vijaynagar, Mysuru";
-
-select * from DriversWithAccidentInPlace;
-
--- Trigger that prevents a driver with total_damage_amount greater than Rs. 50,000 from owning a car
-
-delimiter //
-create trigger PreventOwnership
-before insert on owns
-for each row
-begin
-	if new.driver_id in (select driver_id from participated group by driver_id
-having sum(damage_amount) >= 50000) then
-	signal sqlstate '45000' set message_text = 'Damage Greater than Rs.50,000';
-	end if;
-end;//
-
-delimiter ;
-
-insert into owns VALUES
-("D222", "KA-21-AC-5473"); -- Will give error since total damage amount of D222 exceeds 50k
-
--- A trigger that prevents a driver from participating in more than 2 accidents in a given year.
+-- 7. A trigger that prevents a driver from participating in more than 2 accidents in a given year.
 
 DELIMITER //
 create trigger PreventParticipation
@@ -174,17 +137,39 @@ DELIMITER ;
 INSERT INTO participated VALUES
 ("D222", "KA-20-AB-4223", 66666, 20000);
 
+-- 8. Create a view that shows name and address of drivers who own a car.
+
+create view DriversWithCar as
+select driver_name, address
+from person p, owns o
+where p.driver_id=o.driver_id;
+
+select * from DriversWithCar;
 
 
+-- 9. Create a view that shows the names of the drivers who a participated in a accident in a specific place.
 
+create view DriversWithAccidentInPlace as
+select driver_name
+from person p, accident a, participated ptd
+where p.driver_id = ptd.driver_id and a.report_no = ptd.report_no and a.location="Vijaynagar, Mysuru";
 
+select * from DriversWithAccidentInPlace;
 
+-- 10. Trigger that prevents a driver with total_damage_amount greater than Rs. 50,000 from owning a car
 
+delimiter //
+create trigger PreventOwnership
+before insert on owns
+for each row
+begin
+	if new.driver_id in (select driver_id from participated group by driver_id
+having sum(damage_amount) >= 50000) then
+	signal sqlstate '45000' set message_text = 'Damage Greater than Rs.50,000';
+	end if;
+end;//
 
+delimiter ;
 
-
-
-
-
-
-
+insert into owns VALUES
+("D222", "KA-21-AC-5473"); -- Will give error since total damage amount of D222 exceeds 50k
