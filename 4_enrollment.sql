@@ -151,6 +151,9 @@ INSERT INTO Enroll VALUES
 ("01HF235", 002, 5, 5); -- Gives error since marks is less than 10
 
 
+--------Extras------------
+
+
 -- 7. Create a view to show the enrolled details of a student.
 create view StudentEnrollmentDetails as
 select * from Enroll

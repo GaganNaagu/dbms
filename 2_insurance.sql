@@ -120,22 +120,24 @@ where c.reg_no=p.reg_no;
 
 select * from CarsInAccident;
 
--- 7. A trigger that prevents a driver from participating in more than 2 accidents in a given year.
+-- 7. A trigger that prevents a driver from participating in more than 3 accidents in a given year.
 
 DELIMITER //
 create trigger PreventParticipation
 before insert on participated
 for each row
 BEGIN
-    IF 2<=(select count(*) from participated p, accident a where p.driver_id=new.driver_id and p.report_no=a.report_no and
+    IF 3<=(select count(*) from participated p, accident a where p.driver_id=new.driver_id and p.report_no=a.report_no and
     year(a.accident_date)=(select year(accident_date) from accident where report_no=new.report_no)) THEN
-		signal sqlstate '45000' set message_text='Driver has already participated in 2 accidents';
+		signal sqlstate '45000' set message_text='Driver has already participated in 3 accidents';
 	END IF;
 END;//
 DELIMITER ;
 
 INSERT INTO participated VALUES
 ("D222", "KA-20-AB-4223", 66666, 20000);
+
+--------Extras------------
 
 -- 8. Create a view that shows name and address of drivers who own a car.
 

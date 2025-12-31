@@ -134,6 +134,8 @@ DELIMITER ;
 
 delete from Project where p_no=241563; -- Will give error
 
+--------Extras------------
+
 -- 8. Create a view that shows project name, location and dept.
 create view ProjectDetails as
 select p_name, p_loc, dname

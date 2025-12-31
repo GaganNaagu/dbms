@@ -142,6 +142,8 @@ INSERT INTO OrderItems VALUES
 
 select * from Orders;
 
+--------Extras------------
+
 -- 8. Trigger that prevents warehouse details from being deleted if any item has to be shipped from that warehouse
 
 DELIMITER $$

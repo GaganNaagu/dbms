@@ -90,13 +90,13 @@ select sname from Sailors s where not exists
 select sname, age
 from Sailors where age in (select max(age) from Sailors);
 
--- 6. For each boat which was reserved by atleast 2 sailors with age >= 40, find the bid and average age of such sailors
+-- 6. For each boat which was reserved by atleast 5 sailors with age >= 40, find the bid and average age of such sailors
 
 select b.bid, avg(s.age) as average_age
 from Sailors s, Boat b, reserves r
 where r.sid=s.sid and r.bid=b.bid and s.age>=40
 group by bid
-having 2<=count(distinct r.sid);
+having 5<=count(distinct r.sid);
 
 -- 7. Create a view that shows the names and colours of all the boats that have been reserved by a sailor with a specific rating.
 
@@ -124,6 +124,7 @@ DELIMITER ;
 
 delete from Boat where bid=103; -- This gives error since boat 103 is reserved
 
+--------Extras------------
 
 -- 9. A view that shows names and ratings of all sailors sorted by rating in descending order
 
