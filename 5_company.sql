@@ -44,7 +44,7 @@ create table if not exists WorksOn(
 );
 
 INSERT INTO Employee VALUES
-("01NB235", "Chandan_Krishna","Siddartha Nagar, Mysuru", "Male", 1500000, "01NB235", 5),
+("01NB235", "Likith_Scott","Siddartha Nagar, Mysuru", "Male", 1500000, "01NB235", 5),
 ("01NB354", "Employee_2", "Lakshmipuram, Mysuru", "Female", 1200000,"01NB235", 2),
 ("02NB254", "Employee_3", "Pune, Maharashtra", "Male", 1000000,"01NB235", 4),
 ("03NB653", "Employee_4", "Hyderabad, Telangana", "Male", 2500000, "01NB354", 5),
@@ -91,7 +91,7 @@ SELECT * FROM WorksOn;
 
 -- Make a list of all project numbers for projects that involve an employee whose last name is ‘Scott’, either as a worker or as a manager of the department that controls the project.
 
-select p_no,p_name,name from Project p, Employee e where p.d_no=e.d_no and e.name like "%Krishna";
+select p_no,p_name,name from Project p, Employee e where p.d_no=e.d_no and e.name like "%Scott";
 
 
 -- Show the resulting salaries if every employee working on the ‘IoT’ project is given a 10 percent raise
@@ -154,6 +154,6 @@ END; //
 
 DELIMITER ;
 
-delete from Project where p_no=241563; -- Will give error 
+delete from Project where p_no=241563; -- Will give error
 
 

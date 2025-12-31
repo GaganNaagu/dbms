@@ -26,9 +26,9 @@ create table if not exists reserves(
 
 insert into Sailors values
 (1,"Albert", 5.0, 40),
-(2, "Nakul", 5.0, 49),
-(3, "Darshan", 9, 18),
-(4, "Astorm Gowda", 2, 68),
+(2, "Gagan", 5.0, 49),
+(3, "Likith", 9, 18),
+(4, "Astorm Martin", 2, 68),
 (5, "Armstormin", 7, 19);
 
 
@@ -50,8 +50,8 @@ select * from Boat;
 select * from reserves;
 
 -- Find the colours of the boats reserved by Albert
-select color 
-from Sailors s, Boat b, reserves r 
+select color
+from Sailors s, Boat b, reserves r
 where s.sid=r.sid and b.bid=r.bid and s.sname="Albert";
 
 -- Find all the sailor sids who have rating atleast 8 or reserved boat 103
@@ -69,7 +69,7 @@ where reserves.bid=103);
 
 select s.sname
 from Sailors s
-where s.sid not in 
+where s.sid not in
 (select s1.sid from Sailors s1, reserves r1 where r1.sid=s1.sid and s1.sname like "%storm%")
 and s.sname like "%storm%"
 order by s.sname ASC;
@@ -94,7 +94,7 @@ where r.sid=s.sid and r.bid=b.bid and s.age>=40
 group by bid
 having 2<=count(distinct r.sid);
 
--- A view that shows names and ratings of all sailors sorted by rating in descending order\
+-- A view that shows names and ratings of all sailors sorted by rating in descending order
 
 create view NamesAndRating as
 select sname, rating
@@ -125,7 +125,7 @@ select * from ReservedBoatsWithRatedSailor;
 -- Trigger that prevents boats from being deleted if they have active reservation
 
 DELIMITER //
-create or replace trigger CheckAndDelete
+create trigger CheckAndDelete
 before delete on Boat
 for each row
 BEGIN

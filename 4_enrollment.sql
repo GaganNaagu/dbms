@@ -137,12 +137,12 @@ select * from CoursesOptedByStudent;
 
 -- Create a view to show the enrolled details of a student.
 create view StudentEnrollmentDetails as
-select * from Enroll 
+select * from Enroll
 where regno="01HF235";
 
 select * from StudentEnrollmentDetails;
 
--- Create a view to display course related books from course_adoption and text book table using book_ISBN. 
+-- Create a view to display course related books from course_adoption and text book table using book_ISBN.
 create view CourseRelatedBooks as
 select cname, book_title
 from Course c, TextBook tb, BookAdoption ba
@@ -150,9 +150,9 @@ where c.course=ba.course and tb.bookIsbn=ba.bookIsbn;
 
 select * from CourseRelatedBooks;
 
--- Create a trigger such that it Deletes all records from enroll table when course is deleted 
+-- Create a trigger such that it Deletes all records from enroll table when course is deleted
 DELIMITER //
-create or replace trigger DeleteRecords
+create trigger DeleteRecords
 after delete on Course
 for each row
 BEGIN
@@ -163,9 +163,9 @@ DELIMITER ;
 
 delete from Course where course=2; -- Will also delete records from Enroll table
 
--- Create a trigger that prevents a student from enrolling in a course if the marks pre_requisit is less than the given threshold 
+-- Create a trigger that prevents a student from enrolling in a course if the marks pre_requisit is less than the given threshold
 DELIMITER //
-create or replace trigger PreventEnrollment
+create trigger PreventEnrollment
 before insert on Enroll
 for each row
 BEGIN

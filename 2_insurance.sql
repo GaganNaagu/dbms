@@ -88,7 +88,7 @@ where p.report_no=a.report_no and a.accident_date like "2021%";
 
 select COUNT(distinct a.report_no)
 from accident a
-where exists 
+where exists
 (select * from person p, participated ptd where p.driver_id=ptd.driver_id and p.driver_name="Smith" and a.report_no=ptd.report_no);
 
 -- Add a new accident to the database
@@ -142,8 +142,8 @@ select * from DriversWithAccidentInPlace;
 -- Trigger that prevents a driver with total_damage_amount greater than Rs. 50,000 from owning a car
 
 delimiter //
-create or replace trigger PreventOwnership 
-before insert on owns 
+create trigger PreventOwnership
+before insert on owns
 for each row
 begin
 	if new.driver_id in (select driver_id from participated group by driver_id
@@ -164,7 +164,8 @@ create trigger PreventParticipation
 before insert on participated
 for each row
 BEGIN
-	IF 2<=(select count(*) from participated where driver_id=new.driver_id) THEN
+    IF 2<=(select count(*) from participated p, accident a where p.driver_id=new.driver_id and p.report_no=a.report_no and
+    year(a.accident_date)=(select year(accident_date) from accident where report_no=new.report_no)) THEN
 		signal sqlstate '45000' set message_text='Driver has already participated in 2 accidents';
 	END IF;
 END;//
