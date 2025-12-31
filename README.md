@@ -1,7 +1,7 @@
 # JSSSTU DBMS Lab (Database Management System)
 
 ## Sailors Database 
-!(https://r2.fivemanage.com/image/1jvnzLZJ9Mq8.png)
+![](https://r2.fivemanage.com/image/1jvnzLZJ9Mq8.png)
 1. Find the colours of boats reserved by Albert 
 2. Find all sailor id’s of sailors who have a rating of at least 8 or reserved boat 103 
 3. Find the names of sailors who have not reserved a boat whose name contains the string “storm”. Order the names in ascending order. 
