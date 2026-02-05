@@ -80,9 +80,11 @@ ORDER BY s.sname ASC;
 
 -- 4. Find the name of the sailors who have reserved all boats
 
-select sname from Sailors s where not exists
-	(select * from Boat b where not exists
-		(select * from reserves r where r.sid=s.sid and b.bid=r.bid));
+SELECT s.sname
+FROM Sailors s
+JOIN reserves r ON s.sid = r.sid
+GROUP BY s.sid, s.sname
+HAVING COUNT(DISTINCT r.bid) = (SELECT COUNT(*) FROM Boat);
 
 
 -- 5. Find the name and age of the oldest sailor
@@ -125,88 +127,3 @@ END;//
 DELIMITER ;
 
 delete from Boat where bid=103; -- This gives error since boat 103 is reserved
-
---
---
---    EEEEEEEEEEEEEEEEEEEEEE                             tttt
---    E::::::::::::::::::::E                          ttt:::t
---    E::::::::::::::::::::E                          t:::::t
---    EE::::::EEEEEEEEE::::E                          t:::::t
---      E:::::E       EEEEEExxxxxxx      xxxxxxxttttttt:::::ttttttt   rrrrr   rrrrrrrrr   aaaaaaaaaaaaa
---      E:::::E              x:::::x    x:::::x t:::::::::::::::::t   r::::rrr:::::::::r  a::::::::::::a
---      E::::::EEEEEEEEEE     x:::::x  x:::::x  t:::::::::::::::::t   r:::::::::::::::::r aaaaaaaaa:::::a
---      E:::::::::::::::E      x:::::xx:::::x   tttttt:::::::tttttt   rr::::::rrrrr::::::r         a::::a
---      E:::::::::::::::E       x::::::::::x          t:::::t          r:::::r     r:::::r  aaaaaaa:::::a
---      E::::::EEEEEEEEEE        x::::::::x           t:::::t          r:::::r     rrrrrrraa::::::::::::a
---      E:::::E                  x::::::::x           t:::::t          r:::::r           a::::aaaa::::::a
---      E:::::E       EEEEEE    x::::::::::x          t:::::t    ttttttr:::::r          a::::a    a:::::a
---    EE::::::EEEEEEEE:::::E   x:::::xx:::::x         t::::::tttt:::::tr:::::r          a::::a    a:::::a
---    E::::::::::::::::::::E  x:::::x  x:::::x        tt::::::::::::::tr:::::r          a:::::aaaa::::::a
---    E::::::::::::::::::::E x:::::x    x:::::x         tt:::::::::::ttr:::::r           a::::::::::aa:::a
---    EEEEEEEEEEEEEEEEEEEEEExxxxxxx      xxxxxxx          ttttttttttt  rrrrrrr            aaaaaaaaaa  aaaa
---
---
---
---
---
---
---                                                                                                        
--- 9. A view that shows names and ratings of all sailors sorted by rating in descending order
-
-create view NamesAndRating as
-select sname, rating
-from Sailors
-order by rating DESC;
-
-select * from NamesAndRating;
-
--- 10. Create a view that shows the names of the sailors who have reserved a boat on a given date.
-
-create view SailorsWithReservation as
-select sname
-from Sailors s, reserves r
-where r.sid=s.sid and r.sdate="2023-03-06";
-
-select * from SailorsWithReservation;
-
--- 11. A trigger that prevents sailors with rating less than 3 from reserving a boat.
-
-
-DELIMITER //
-create trigger BlockReservation
-before insert on reserves
-for each row
-BEGIN
-	IF EXISTS (select * from Sailors where sid=new.sid and rating<3) THEN
-		signal sqlstate '45000' set message_text='Sailor rating less than 3';
-	END IF;
-END;//
-
-DELIMITER ;
-
-insert into reserves values
-(4,2,"2023-10-01"); -- Will give error since sailor rating is less than 3
-
-
--- 12. A trigger that deletes all expired reservations.
-
-create table TempTable (
-	last_deleted_date date primary key
-); -- Temporary table to be used in DeleteExpiredReservations Table
-
-DELIMITER //
-create trigger DeleteExpiredReservations
-before insert on TempTable
-for each row
-BEGIN
-	delete from reserves where sdate<curdate();
-END;//
-
-DELIMITER ;
-
-select * from reserves; -- Expired reservations are available
-
-insert into TempTable values
-(curdate()); -- This will delete the expired reservations and also insert the current date to temp table
-
-select * from reserves; -- Notice that all expired reservations are deleted
