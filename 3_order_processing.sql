@@ -112,8 +112,10 @@ JOIN Orders o ON c.cust_id = o.cust_id
 GROUP BY c.cname;
 
 -- 4. Delete all orders for customer named "Kumar".
-delete from Orders where cust_id = (select cust_id from Customers where cname like "%Kumar%");
-
+DELETE o
+FROM Orders o
+JOIN Customers c ON o.cust_id = c.cust_id
+WHERE c.cname LIKE '%Kumar%';
 
 -- 5. Find the item with the maximum unit price.
 select max(unitprice) from Items;

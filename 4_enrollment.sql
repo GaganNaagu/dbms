@@ -115,7 +115,7 @@ WHERE NOT EXISTS (
     FROM BookAdoption b
     JOIN TextBook t ON b.bookIsbn = t.bookIsbn
     WHERE b.course = c.course
-      AND t.publisher <> 'Pearson'
+	AND t.publisher <> 'Pearson'
 );
 
 
