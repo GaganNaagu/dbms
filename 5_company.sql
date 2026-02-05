@@ -133,15 +133,18 @@ WHERE d.dname = 'Accounts';
 
 SELECT e.name
 FROM Employee e
-JOIN WorksOn w ON e.ssn = w.ssn
-JOIN Project p ON w.p_no = p.p_no
-WHERE p.d_no = 1
-GROUP BY e.ssn, e.name
-HAVING COUNT(DISTINCT p.p_no) = (
-    SELECT COUNT(*)
-    FROM Project
-    WHERE d_no = 1
+WHERE NOT EXISTS (
+    SELECT *
+    FROM Project p
+    WHERE p.d_no = 1
+      AND NOT EXISTS (
+          SELECT *
+          FROM WorksOn w
+          WHERE w.p_no = p.p_no
+            AND w.ssn = e.ssn
+      )
 );
+
 
 -- 5. For each department that has more than one employees, retrieve the department number and the number of its employees who are making more than Rs. 6,00,000.
 SELECT e.d_no, COUNT(*)
