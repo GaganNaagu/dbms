@@ -87,10 +87,11 @@ where year(a.accident_date) = 2021;
 
 -- 2. Find the number of accident in which cars belonging to smith were involved
 
-select COUNT(distinct a.report_no)
-from accident a
-where exists
-(select * from person p, participated ptd where p.driver_id=ptd.driver_id and p.driver_name="Smith" and a.report_no=ptd.report_no);
+SELECT COUNT(DISTINCT a.report_no)
+FROM accident a
+JOIN participated ptd ON a.report_no = ptd.report_no
+JOIN person p ON ptd.driver_id = p.driver_id
+WHERE p.driver_name = 'Smith';
 
 -- 3. Add a new accident to the database
 
