@@ -108,16 +108,12 @@ ORDER BY t.book_title;
 
 
 -- 3. List any department that has all its adopted books published by a specific publisher.
-SELECT dept
+SELECT c.dept
 FROM Course c
-WHERE NOT EXISTS (
-    SELECT *
-    FROM BookAdoption b
-    JOIN TextBook t ON b.bookIsbn = t.bookIsbn
-    WHERE b.course = c.course
-	AND t.publisher <> 'Pearson'
-);
-
+JOIN BookAdoption b ON c.course = b.course
+JOIN TextBook t ON b.bookIsbn = t.bookIsbn
+GROUP BY c.dept
+HAVING COUNT(*) = SUM(CASE WHEN t.publisher = 'Pearson' THEN 1 ELSE 0 END);
 
 
 -- 4. List the students who have scored maximum marks in ‘DBMS’ course.
